@@ -1,0 +1,60 @@
+<div class="dashboard-container">
+  <header class="page-header">
+    <h1>Meus Agendamentos</h1>
+    <p>Confira seus próximos horários</p>
+  </header>
+
+  @if (isLoading()) {
+    <p class="loading-text">Carregando sua agenda...</p>
+  } @else {
+
+    @if (appointments().length === 0) {
+      <div class="empty-state">
+        <mat-icon>event_busy</mat-icon>
+        <p>Você não tem agendamentos para os próximos dias.</p>
+        <button mat-raised-button color="primary">Novo Agendamento</button>
+      </div>
+    }
+
+    <div class="appointments-grid">
+      @for (appt of appointments(); track appt.id) {
+        <mat-card class="appt-card">
+          <mat-card-header>
+            <div mat-card-avatar class="avatar-icon">
+              <mat-icon>content_cut</mat-icon>
+            </div>
+            <mat-card-title>{{ appt.serviceName }}</mat-card-title>
+            <mat-card-subtitle>
+              com {{ appt.professionalName }}
+            </mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="info-row">
+              <mat-icon>calendar_today</mat-icon>
+              <span>{{ appt.startTime | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="info-row">
+              <mat-icon>access_time</mat-icon>
+              <span>{{ appt.startTime | date:'HH:mm' }} - {{ appt.endTime | date:'HH:mm' }}</span>
+            </div>
+            <div class="info-row price">
+              <mat-icon>attach_money</mat-icon>
+              <span>{{ appt.price | currency:'BRL' }}</span>
+            </div>
+
+            <div class="status-chip">
+              <mat-chip [class]="appt.status">{{ appt.status }}</mat-chip>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions align="end">
+            @if (appt.status !== 'CANCELED') {
+              <button mat-button color="warn" (click)="cancel(appt.id)">Cancelar</button>
+            }
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

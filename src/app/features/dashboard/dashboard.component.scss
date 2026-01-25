@@ -1,0 +1,94 @@
+.dashboard-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: #666;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 0;
+  color: #888;
+
+  mat-icon {
+    font-size: 4rem;
+    width: 4rem;
+    height: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.appointments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.appt-card {
+  .avatar-icon {
+    background: #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+  }
+
+  .info-row {
+    display: flex;
+    align-items: center;
+    margin-top: 0.8rem;
+    color: #444;
+
+    mat-icon {
+      font-size: 1.2rem;
+      width: 1.2rem;
+      height: 1.2rem;
+      margin-right: 0.5rem;
+      color: #777;
+    }
+
+    &.price {
+      font-weight: bold;
+      color: #2e7d32; // Verde dinheiro
+    }
+  }
+
+  .status-chip {
+    margin-top: 1rem;
+
+    // Classes dinâmicas baseadas no status
+    .CONFIRMED {
+      --mdc-chip-elevated-container-color: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .PENDING {
+      --mdc-chip-elevated-container-color: #fff3e0;
+      color: #ef6c00;
+    }
+
+    .CANCELED {
+      --mdc-chip-elevated-container-color: #ffebee;
+      color: #c62828;
+      text-decoration: line-through;
+    }
+  }
+}
