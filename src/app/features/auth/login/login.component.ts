@@ -50,7 +50,7 @@ export class LoginComponent {
 
     this.authService.login(loginData).subscribe({
       next: () => {
-        this.router.navigate(['/']); // Redireciona para Home após login
+        this.router.navigate(['/dashboard']); // Redireciona para Home após login
       },
       error: (err) => {
         this.isLoading.set(false);

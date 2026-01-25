@@ -4,6 +4,7 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { authGuard } from './core/guards/auth.guard';
+import { NewAppointmentComponent } from './features/appointments/new-appointment/new-appointment.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent }, // Página inicial
@@ -11,10 +12,17 @@ export const routes: Routes = [
   { path: 'cadastrar', component: RegisterComponent },
 
   {
-    path: 'dashboard', component: DashboardComponent,
-    canActivate: [authGuard]
-
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [authGuard],
   },
+
+  {
+    path: 'appointments/new',
+    component: NewAppointmentComponent,
+    canActivate: [authGuard],
+  },
+
   { path: '**', redirectTo: '' },
   // Redireciona rotas inválidas para a home
 ];

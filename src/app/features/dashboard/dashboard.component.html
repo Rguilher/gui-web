@@ -1,18 +1,31 @@
 <div class="dashboard-container">
   <header class="page-header">
-    <h1>Meus Agendamentos</h1>
-    <p>Confira seus próximos horários</p>
+    <div class="header-content">
+      <div>
+        <h1>Meus Agendamentos</h1>
+        <p>Confira seus horários para esta semana</p>
+      </div>
+      <button mat-raised-button color="primary" routerLink="/appointments/new">
+        <mat-icon>add</mat-icon>
+        Novo Agendamento
+      </button>
+    </div>
   </header>
 
   @if (isLoading()) {
-    <p class="loading-text">Carregando sua agenda...</p>
+    <div class="loading-container">
+      <p>Carregando sua agenda...</p>
+    </div>
   } @else {
 
     @if (appointments().length === 0) {
       <div class="empty-state">
         <mat-icon>event_busy</mat-icon>
-        <p>Você não tem agendamentos para os próximos dias.</p>
-        <button mat-raised-button color="primary">Novo Agendamento</button>
+        <h3>Nenhum agendamento encontrado</h3>
+        <p>Você não tem horários marcados para os próximos 7 dias.</p>
+        <button mat-stroked-button color="primary" routerLink="/appointments/new">
+          Agendar Agora
+        </button>
       </div>
     }
 
@@ -24,9 +37,7 @@
               <mat-icon>content_cut</mat-icon>
             </div>
             <mat-card-title>{{ appt.serviceName }}</mat-card-title>
-            <mat-card-subtitle>
-              com {{ appt.professionalName }}
-            </mat-card-subtitle>
+            <mat-card-subtitle>com {{ appt.professionalName }}</mat-card-subtitle>
           </mat-card-header>
 
           <mat-card-content>

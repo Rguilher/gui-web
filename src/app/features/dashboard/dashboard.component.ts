@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { DatePipe, CurrencyPipe } from '@angular/common'; // Pipes para formatar data e preço
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-dashboard',
@@ -21,7 +22,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatSnackBarModule,
     DatePipe,
     CurrencyPipe,
-  ],
+    RouterLink
+],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })

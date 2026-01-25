@@ -1,0 +1,58 @@
+<div class="appointment-container">
+  <mat-card class="appointment-card">
+    <mat-card-header>
+      <mat-card-title>Agendar Serviço</mat-card-title>
+      <mat-card-subtitle>Escolha o serviço e o profissional de sua preferência</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Selecione o Serviço</mat-label>
+          <mat-select formControlName="serviceId">
+            @for (service of services(); track service.id) {
+              <mat-option [value]="service.id">
+                {{ service.name }} - {{ service.price | currency:'BRL' }}
+              </mat-option>
+            }
+          </mat-select>
+          @if (form.get('serviceId')?.hasError('required')) {
+            <mat-error>Obrigatório</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Selecione o Profissional</mat-label>
+          <mat-select formControlName="professionalId">
+            @for (prof of professionals(); track prof.id) {
+              <mat-option [value]="prof.id">{{ prof.name }}</mat-option>
+            }
+          </mat-select>
+          @if (form.get('professionalId')?.hasError('required')) {
+            <mat-error>Obrigatório</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Data</mat-label>
+          <input matInput [matDatepicker]="picker" [min]="minDate" formControlName="date">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Horário</mat-label>
+          <input matInput type="time" formControlName="time" min="08:00" max="18:00">
+        </mat-form-field>
+
+        <div class="actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+            CONFIRMAR
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
