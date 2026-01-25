@@ -1,0 +1,55 @@
+<mat-toolbar color="primary" class="navbar">
+  <span>Studio Gui</span>
+  <span class="spacer"></span>
+  <button mat-button routerLink="/login">Entrar</button>
+  <button mat-raised-button color="accent" routerLink="/register">Cadastre-se</button>
+</mat-toolbar>
+
+<header class="hero">
+  <div class="hero-content">
+    <h1>Beleza e Estilo ao seu Alcance</h1>
+    <p>Agende seus horários online, sem ligações e sem espera.</p>
+    <button mat-raised-button color="accent" size="large" routerLink="/register">
+      <mat-icon>calendar_today</mat-icon>
+      Quero Agendar Agora
+    </button>
+  </div>
+</header>
+
+<section class="features">
+  <div class="container">
+    <h2>Por que escolher o Studio Gui?</h2>
+
+    <div class="cards-grid">
+      <mat-card class="feature-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar color="primary">schedule</mat-icon>
+          <mat-card-title>Agendamento 24h</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Marque seu horário a qualquer momento, de onde estiver.</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="feature-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar color="primary">star</mat-icon>
+          <mat-card-title>Profissionais Top</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Equipe qualificada pronta para transformar seu visual.</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="feature-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar color="primary">notifications</mat-icon>
+          <mat-card-title>Lembretes</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Não perca seu horário. Nós te avisamos.</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</section>
