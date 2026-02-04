@@ -24,5 +24,5 @@ export const routes: Routes = [
   },
 
   { path: '**', redirectTo: '' },
-  // Redireciona rotas inválidas para a home
+  // Redireciona rotas inválidas para a home.
 ];
