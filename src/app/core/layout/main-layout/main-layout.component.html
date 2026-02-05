@@ -1,1 +1,23 @@
-<p>main-layout works!</p>
+<div class="layout-container">
+  <mat-toolbar color="primary">
+    <button mat-icon-button routerLink="/dashboard">
+      <mat-icon>home</mat-icon>
+    </button>
+    <span>Studio Gui</span>
+
+    <span class="spacer"></span>
+
+    <button mat-button (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Sair
+    </button>
+  </mat-toolbar>
+
+  @if (loadingService.isLoading()) {
+    <mat-progress-bar mode="indeterminate" color="accent" class="global-loader"></mat-progress-bar>
+  }
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

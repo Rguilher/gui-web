@@ -1,0 +1,27 @@
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.global-loader {
+  position: absolute;
+  top: 64px;
+  /* Altura padrão da toolbar */
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  /* Fica acima do conteúdo */
+}
+
+.content {
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+  background-color: #f5f5f5;
+  /* Cor de fundo suave */
+}

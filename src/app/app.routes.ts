@@ -3,26 +3,32 @@ import { LandingComponent } from './features/landing/landing.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
-import { authGuard } from './core/guards/auth.guard';
 import { NewAppointmentComponent } from './features/appointments/new-appointment/new-appointment.component';
+import { MainLayoutComponent } from './core/layout/main-layout/main-layout.component';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', component: LandingComponent }, // Página inicial
+  // --- Rotas Públicas (Sem Layout Global) ---
+  {
+    path: '',
+    component: LandingComponent,
+    pathMatch: 'full' // Garante que só carrega na raiz exata
+  },
   { path: 'login', component: LoginComponent },
   { path: 'cadastrar', component: RegisterComponent },
 
+  // --- Rotas Protegidas (Dentro do MainLayout) ---
   {
-    path: 'dashboard',
-    component: DashboardComponent,
-    canActivate: [authGuard],
+    path: '', // Rota "Virtual" para aplicar o Layout
+    component: MainLayoutComponent,
+    canActivate: [authGuard], // Protege todas as filhas de uma vez
+    children: [
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'appointments/new', component: NewAppointmentComponent },
+      // Futuras rotas protegidas virão aqui (ex: profile, history)
+    ]
   },
 
-  {
-    path: 'appointments/new',
-    component: NewAppointmentComponent,
-    canActivate: [authGuard],
-  },
-
-  { path: '**', redirectTo: '' },
-  // Redireciona rotas inválidas para a home.
+  // --- Wildcard (Sempre por último) ---
+  { path: '**', redirectTo: '' }
 ];
