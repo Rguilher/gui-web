@@ -13,13 +13,10 @@
           <mat-select formControlName="serviceId">
             @for (service of services(); track service.id) {
               <mat-option [value]="service.id">
-                {{ service.name }} - {{ service.price | currency:'BRL' }}
+                {{ service.name }} - {{ service.price | currency:'BRL' }} ({{service.durationMin || 45}} min)
               </mat-option>
             }
           </mat-select>
-          @if (form.get('serviceId')?.hasError('required')) {
-            <mat-error>Obrigatório</mat-error>
-          }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
@@ -29,26 +26,53 @@
               <mat-option [value]="prof.id">{{ prof.name }}</mat-option>
             }
           </mat-select>
-          @if (form.get('professionalId')?.hasError('required')) {
-            <mat-error>Obrigatório</mat-error>
-          }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Data</mat-label>
-          <input matInput [matDatepicker]="picker" [min]="minDate" formControlName="date">
+          <input matInput [matDatepicker]="picker" formControlName="date" [min]="minDate">
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Horário</mat-label>
-          <input matInput type="time" formControlName="time" min="08:00" max="18:00">
-        </mat-form-field>
+        <div class="slots-container">
+          <h3>Horários Disponíveis</h3>
+
+          @if (!form.value.serviceId || !form.value.professionalId || !form.value.date) {
+            <p class="hint-text">Selecione serviço, profissional e data para ver a agenda.</p>
+          }
+
+          @if (isSearchingSlots()) {
+             <div class="loading-slots">
+                <p>Verificando disponibilidade...</p>
+             </div>
+          }
+
+          @if (availableSlots().length > 0 && !isSearchingSlots()) {
+            <mat-chip-listbox aria-label="Seleção de Horário" formControlName="time">
+              @for (slot of availableSlots(); track slot) {
+                <mat-chip-option [value]="slot" (click)="selectTime(slot)" color="primary">
+                  {{ slot }}
+                </mat-chip-option>
+              }
+            </mat-chip-listbox>
+          }
+
+          @if (availableSlots().length === 0 && !isSearchingSlots() && form.value.serviceId && form.value.professionalId && form.value.date) {
+            <div class="empty-slots">
+              <mat-icon>event_busy</mat-icon>
+              <p>Agenda lotada para esta data.</p>
+            </div>
+          }
+
+          @if (form.get('time')?.hasError('required') && form.get('time')?.touched) {
+            <mat-error class="slot-error">Selecione um horário.</mat-error>
+          }
+        </div>
 
         <div class="actions">
-          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
-            CONFIRMAR
+          <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || form.pristine">
+            Confirmar Agendamento
           </button>
         </div>
 

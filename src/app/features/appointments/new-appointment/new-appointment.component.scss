@@ -28,12 +28,75 @@
   margin-bottom: 1rem;
 }
 
+/* --- Área de Slots --- */
+.slots-container {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #424242;
+    margin-bottom: 1rem;
+  }
+
+  .hint-text {
+    color: #757575;
+    font-style: italic;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 0.5rem;
+  }
+
+  .loading-slots {
+    text-align: center;
+    color: #3f51b5;
+    /* Cor primária */
+    font-weight: 500;
+  }
+
+  mat-chip-listbox {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-start;
+  }
+
+  .empty-slots {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #d32f2f;
+    gap: 0.5rem;
+    padding: 1rem;
+
+    mat-icon {
+      font-size: 2rem;
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  .slot-error {
+    font-size: 0.8rem;
+    margin-top: 1rem;
+    display: block;
+    color: #f44336;
+    text-align: center;
+  }
+}
+
 .actions {
   margin-top: 1.5rem;
 
   button {
     width: 100%;
-    padding: 1.5rem;
+    padding: 1.2rem;
     font-size: 1.1rem;
+    border-radius: 8px;
   }
 }

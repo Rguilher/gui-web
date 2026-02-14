@@ -1,13 +1,13 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 
-// --- Interfaces de Apoio (Dropdowns) ---
 export interface ServiceOption {
   id: number;
   name: string;
   price: number;
+  durationMin?: number;
 }
 
 export interface ProfessionalOption {
@@ -15,14 +15,12 @@ export interface ProfessionalOption {
   name: string;
 }
 
-// --- Interface de Request (Enviar ao Backend) ---
 export interface CreateAppointmentRequest {
   professionalId: number;
   serviceId: number;
-  startTime: string; // Formato ISO 8601
+  startTime: string;
 }
 
-// --- Interface de Response (Meus Agendamentos) ---
 export interface Appointment {
   id: number;
   clientName: string;
@@ -39,11 +37,9 @@ export interface Appointment {
 })
 export class AppointmentService {
   private http = inject(HttpClient);
-  // Usa a URL base da API definida no environment (ex: http://localhost:8080/api)
   private apiUrl = environment.apiUrl;
 
-  // --- Métodos de Leitura (Dashboard) ---
-
+  // --- Leitura ---
   getAppointmentsToday(): Observable<Appointment[]> {
     return this.http.get<Appointment[]>(`${this.apiUrl}/appointments/today`);
   }
@@ -56,18 +52,31 @@ export class AppointmentService {
     return this.http.delete<void>(`${this.apiUrl}/appointments/${id}`);
   }
 
-  // --- Métodos de Escrita (Novo Agendamento) ---
-
+  // --- Escrita ---
   getServices(): Observable<ServiceOption[]> {
     return this.http.get<ServiceOption[]>(`${this.apiUrl}/services`);
   }
 
   getProfessionals(): Observable<ProfessionalOption[]> {
-    // 🔥 Consome a nova rota criada no UserController (/api/users/profissional)
-    return this.http.get<any>(`${this.apiUrl}/users/profissional`).pipe(
-      // O Spring retorna um objeto Page { content: [], ... }, então extraímos o content
-      map((response) => response.content || []),
-    );
+    return this.http
+      .get<any>(`${this.apiUrl}/users/profissional`)
+      .pipe(map((response) => response.content || []));
+  }
+
+  // Busca apenas os slots livres
+  getAvailability(
+    professionalId: number,
+    serviceId: number,
+    date: string,
+  ): Observable<string[]> {
+    const params = new HttpParams()
+      .set('professionalId', professionalId)
+      .set('serviceId', serviceId)
+      .set('date', date);
+
+    return this.http.get<string[]>(`${this.apiUrl}/appointments/availability`, {
+      params,
+    });
   }
 
   schedule(data: CreateAppointmentRequest): Observable<any> {

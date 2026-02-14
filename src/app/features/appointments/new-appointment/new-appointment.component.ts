@@ -7,9 +7,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core'; // Necessário para o Datepicker
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CurrencyPipe } from '@angular/common';
+import { MatChipsModule } from '@angular/material/chips'; // Importante para os botões
+import { MatIconModule } from '@angular/material/icon';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import {
   AppointmentService,
   ProfessionalOption,
@@ -28,8 +30,11 @@ import {
     MatButtonModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatChipsModule,
+    MatIconModule,
     CurrencyPipe,
   ],
+  providers: [DatePipe],
   templateUrl: './new-appointment.component.html',
   styleUrl: './new-appointment.component.scss',
 })
@@ -38,31 +43,38 @@ export class NewAppointmentComponent implements OnInit {
   private appointmentService = inject(AppointmentService);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
+  private datePipe = inject(DatePipe);
 
   services = signal<ServiceOption[]>([]);
   professionals = signal<ProfessionalOption[]>([]);
 
-  minDate = new Date(); // Impede agendar no passado
+  // Controle visual dos horários
+  availableSlots = signal<string[]>([]);
+  isSearchingSlots = signal<boolean>(false);
+
+  minDate = new Date();
 
   form = this.fb.group({
     serviceId: ['', Validators.required],
     professionalId: ['', Validators.required],
     date: [new Date(), Validators.required],
-    time: ['09:00', Validators.required],
+    time: ['', Validators.required], // O valor vem do clique no botão (Chip)
   });
 
   ngOnInit() {
     this.loadResources();
+
+    this.form.valueChanges.subscribe(() => {
+      this.updateAvailability();
+    });
   }
 
   loadResources() {
-    // Carrega Serviços
     this.appointmentService.getServices().subscribe({
       next: (data) => this.services.set(data),
       error: () => this.snackBar.open('Erro ao carregar serviços.', 'Fechar'),
     });
 
-    // Carrega Profissionais (Rota Nova)
     this.appointmentService.getProfessionals().subscribe({
       next: (data) => this.professionals.set(data),
       error: () =>
@@ -70,12 +82,47 @@ export class NewAppointmentComponent implements OnInit {
     });
   }
 
+  updateAvailability() {
+    const { serviceId, professionalId, date } = this.form.value;
+
+    if (serviceId && professionalId && date) {
+      const formattedDate = this.datePipe.transform(date, 'yyyy-MM-dd');
+      if (!formattedDate) return;
+
+      // Limpa horário selecionado anteriormente se ele não existir na nova data
+      const currentTime = this.form.value.time;
+      if (currentTime && !this.isSearchingSlots()) {
+        // Opcional: resetar time aqui se desejar forçar nova escolha
+      }
+
+      this.isSearchingSlots.set(true);
+
+      this.appointmentService
+        .getAvailability(+serviceId, +professionalId, formattedDate)
+        .subscribe({
+          next: (slots) => {
+            this.availableSlots.set(slots);
+            this.isSearchingSlots.set(false);
+          },
+          error: () => {
+            this.availableSlots.set([]);
+            this.isSearchingSlots.set(false);
+          },
+        });
+    } else {
+      this.availableSlots.set([]);
+    }
+  }
+
+  selectTime(time: string) {
+    this.form.patchValue({ time });
+  }
+
   onSubmit() {
     if (this.form.invalid) return;
 
     const { serviceId, professionalId, date, time } = this.form.value;
 
-    // Montagem da Data ISO (yyyy-MM-ddTHH:mm:ss) para o Java
     const dateObj = new Date(date!);
     const [hours, minutes] = time!.split(':');
     dateObj.setHours(+hours, +minutes, 0);
@@ -94,7 +141,6 @@ export class NewAppointmentComponent implements OnInit {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        // Exibe mensagem amigável vinda do backend (ex: "Conflito de horário")
         const msg = err.error?.message || 'Erro ao realizar agendamento.';
         this.snackBar.open(msg, 'Fechar', {
           duration: 5000,
