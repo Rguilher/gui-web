@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatChipsModule } from '@angular/material/chips'; // Importante para os botões
+import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import {
@@ -83,22 +83,19 @@ export class NewAppointmentComponent implements OnInit {
   }
 
   updateAvailability() {
-    const { serviceId, professionalId, date } = this.form.value;
+    // Não precisamos mais do serviceId para buscar a disponibilidade
+    const { professionalId, date } = this.form.value;
 
-    if (serviceId && professionalId && date) {
+    if (professionalId && date) {
       const formattedDate = this.datePipe.transform(date, 'yyyy-MM-dd');
       if (!formattedDate) return;
 
-      // Limpa horário selecionado anteriormente se ele não existir na nova data
-      const currentTime = this.form.value.time;
-      if (currentTime && !this.isSearchingSlots()) {
-        // Opcional: resetar time aqui se desejar forçar nova escolha
-      }
-
+      // Limpa a lista visualmente antes de buscar os novos horários para evitar confusão UX
+      this.availableSlots.set([]);
       this.isSearchingSlots.set(true);
 
       this.appointmentService
-        .getAvailability(+serviceId, +professionalId, formattedDate)
+        .getAvailability(+professionalId, formattedDate)
         .subscribe({
           next: (slots) => {
             this.availableSlots.set(slots);
@@ -127,10 +124,16 @@ export class NewAppointmentComponent implements OnInit {
     const [hours, minutes] = time!.split(':');
     dateObj.setHours(+hours, +minutes, 0);
 
+    // Formata para local string para evitar conversão UTC indesejada pelo backend
+    const localDateString = this.datePipe.transform(
+      dateObj,
+      'yyyy-MM-ddTHH:mm:ss',
+    );
+
     const request = {
       serviceId: Number(serviceId),
       professionalId: Number(professionalId),
-      startTime: dateObj.toISOString(),
+      startTime: localDateString!, // Envia o horário exato que o usuário vê (Wall Clock Time)
     };
 
     this.appointmentService.schedule(request).subscribe({

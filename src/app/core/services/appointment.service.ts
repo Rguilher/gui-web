@@ -63,15 +63,10 @@ export class AppointmentService {
       .pipe(map((response) => response.content || []));
   }
 
-  // Busca apenas os slots livres
-  getAvailability(
-    professionalId: number,
-    serviceId: number,
-    date: string,
-  ): Observable<string[]> {
+  // Busca apenas os slots livres (Agora depende apenas do Profissional e Data)
+  getAvailability(professionalId: number, date: string): Observable<string[]> {
     const params = new HttpParams()
-      .set('professionalId', professionalId)
-      .set('serviceId', serviceId)
+      .set('professionalId', professionalId.toString())
       .set('date', date);
 
     return this.http.get<string[]>(`${this.apiUrl}/appointments/availability`, {

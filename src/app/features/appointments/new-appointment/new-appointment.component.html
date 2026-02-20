@@ -30,7 +30,8 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Data</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="date" [min]="minDate">
+          <input matInput [matDatepicker]="picker" formControlName="date" [min]="minDate"
+                 readonly (click)="picker.open()" style="cursor: pointer;">
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
@@ -38,8 +39,8 @@
         <div class="slots-container">
           <h3>Horários Disponíveis</h3>
 
-          @if (!form.value.serviceId || !form.value.professionalId || !form.value.date) {
-            <p class="hint-text">Selecione serviço, profissional e data para ver a agenda.</p>
+          @if (!form.value.professionalId || !form.value.date) {
+            <p class="hint-text">Selecione o profissional e a data para ver a agenda.</p>
           }
 
           @if (isSearchingSlots()) {
@@ -58,7 +59,7 @@
             </mat-chip-listbox>
           }
 
-          @if (availableSlots().length === 0 && !isSearchingSlots() && form.value.serviceId && form.value.professionalId && form.value.date) {
+          @if (availableSlots().length === 0 && !isSearchingSlots() && form.value.professionalId && form.value.date) {
             <div class="empty-slots">
               <mat-icon>event_busy</mat-icon>
               <p>Agenda lotada para esta data.</p>

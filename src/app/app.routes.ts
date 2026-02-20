@@ -12,10 +12,18 @@ export const routes: Routes = [
   {
     path: '',
     component: LandingComponent,
-    pathMatch: 'full' // Garante que só carrega na raiz exata
+    pathMatch: 'full', // Garante que só carrega na raiz exata
   },
   { path: 'login', component: LoginComponent },
   { path: 'cadastrar', component: RegisterComponent },
+
+  {
+    path: 'auth/forgot-password',
+    loadComponent: () =>
+      import('./features/auth/forgot-password/forgot-password.component').then(
+        (m) => m.ForgotPasswordComponent,
+      ),
+  },
 
   // --- Rotas Protegidas (Dentro do MainLayout) ---
   {
@@ -26,9 +34,9 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'appointments/new', component: NewAppointmentComponent },
       // Futuras rotas protegidas virão aqui (ex: profile, history)
-    ]
+    ],
   },
 
   // --- Wildcard (Sempre por último) ---
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' },
 ];

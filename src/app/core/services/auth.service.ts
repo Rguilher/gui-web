@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
-import { environment } from '../../environments/environment.development';  // Verifique se o caminho dos ".." está correto para sua estrutura de pastas
+import { environment } from '../../environments/environment.development';
 
-// --- Interfaces de Cadastro (Register) ---
 export interface RegisterRequest {
   name: string;
   email: string;
@@ -17,15 +17,24 @@ export interface RegisterResponse {
   phone: string;
 }
 
-// --- Interfaces de Login ---
 export interface LoginRequest {
-  username: string; // Mapeado para o campo "username" que o Spring Security espera
+  username: string;
   password: string;
 }
 
 export interface LoginResponse {
-  accessToken: string;
+  accessToken: string; // Certifique-se que o Backend retorna "accessToken" mesmo. Se for "token", ajuste aqui.
   expiresIn: number;
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  email: string;
+  code: string;
+  newPassword: string;
 }
 
 @Injectable({
@@ -33,15 +42,11 @@ export interface LoginResponse {
 })
 export class AuthService {
   private http = inject(HttpClient);
+  private router = inject(Router);
 
-  // Aponta para http://localhost:8080/api/auth
   private baseUrl = `${environment.apiUrl}/auth`;
 
-  // Signal para que a aplicação saiba reativamente se o usuário está logado
-  // Inicializa verificando se já existe um token salvo no localStorage
   isAuthenticated = signal<boolean>(this.hasToken());
-
-  // --- Métodos de Autenticação ---
 
   register(data: RegisterRequest): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse>(`${this.baseUrl}/register`, data);
@@ -50,26 +55,37 @@ export class AuthService {
   login(data: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.baseUrl}/login`, data).pipe(
       tap((response) => {
-        // Efeito colateral: Salva o token e avisa o app que o usuário logou
         this.saveToken(response.accessToken);
         this.isAuthenticated.set(true);
       }),
     );
   }
 
-  logout() {
-    localStorage.removeItem('auth-token');
-    this.isAuthenticated.set(false);
+  // --- Métodos de Recuperação de Senha ---
+  forgotPassword(email: string): Observable<void> {
+    const request: ForgotPasswordRequest = { email };
+    return this.http.post<void>(`${this.baseUrl}/forgot-password`, request);
   }
 
-  // --- Métodos Auxiliares de Token ---
+  resetPassword(data: ResetPasswordRequest): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/reset-password`, data);
+  }
+
+  logout() {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem('auth-token');
+    }
+
+    this.isAuthenticated.set(false);
+
+    this.router.navigate(['/auth/login']);
+  }
 
   private saveToken(token: string) {
     localStorage.setItem('auth-token', token);
   }
 
   private hasToken(): boolean {
-    // Verifica se estamos rodando no navegador (boa prática para Angular 18/SSR)
     if (typeof localStorage !== 'undefined') {
       return !!localStorage.getItem('auth-token');
     }

@@ -25,7 +25,9 @@
             <mat-error>Digite sua senha</mat-error>
           }
         </mat-form-field>
-
+          <div class="forgot-password-container">
+            <a routerLink="/auth/forgot-password" class="forgot-link">Esqueceu a senha?</a>
+          </div>
         <div class="actions">
           <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || isLoading()">
             @if (isLoading()) {
