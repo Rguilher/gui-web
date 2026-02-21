@@ -1,0 +1,77 @@
+<div class="admin-container">
+  <header class="page-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">admin_panel_settings</mat-icon>
+      <div>
+        <h1>Gestão de Usuários</h1>
+        <p>Busque o e-mail exato do usuário para alterar suas permissões</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="search-section">
+    <mat-form-field appearance="outline" class="search-input">
+      <mat-label>Digite o e-mail do usuário...</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [formControl]="searchControl" placeholder="Ex: renan@studiogui.com">
+    </mat-form-field>
+  </div>
+
+  @if (isSearching()) {
+    <div class="loading-state empty-state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p style="margin-top: 16px;">Buscando no banco de dados...</p>
+    </div>
+  } @else {
+
+    @if (!searchControl.value) {
+      <div class="empty-state">
+        <mat-icon>person_search</mat-icon>
+        <h3>Pesquise um usuário</h3>
+        <p>Digite o e-mail completo no campo acima.</p>
+      </div>
+    }
+
+    @if (searchControl.value && filteredUsers().length === 0) {
+      <div class="empty-state">
+        <mat-icon>sentiment_dissatisfied</mat-icon>
+        <h3>Nenhum usuário encontrado</h3>
+        <p>Não encontramos ninguém com o e-mail "{{ searchControl.value }}".</p>
+      </div>
+    }
+
+    <div class="users-grid">
+      @for (user of filteredUsers(); track user.id) {
+        <mat-card class="user-card">
+          <div class="user-info">
+            <div class="avatar">
+              {{ user.name.charAt(0).toUpperCase() }}
+            </div>
+            <div class="details">
+              <strong>{{ user.name }}</strong>
+              <small>{{ user.email }}</small>
+            </div>
+          </div>
+
+          <div class="role-actions">
+            <mat-form-field appearance="outline" subscriptSizing="dynamic">
+              <mat-select
+                [value]="user.role"
+                (selectionChange)="onRoleChange(user, $event.value)"
+                [disabled]="processingUserId() === user.id">
+
+                @for (role of roles; track role) {
+                  <mat-option [value]="role">{{ role }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            @if (processingUserId() === user.id) {
+              <mat-spinner diameter="24"></mat-spinner>
+            }
+          </div>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

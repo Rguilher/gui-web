@@ -77,4 +77,8 @@ export class AppointmentService {
   schedule(data: CreateAppointmentRequest): Observable<any> {
     return this.http.post(`${this.apiUrl}/appointments`, data);
   }
+
+  getAppointmentsMonth(): Observable<Appointment[]> {
+    return this.http.get<Appointment[]>(`${this.apiUrl}/appointments/month`);
+  }
 }

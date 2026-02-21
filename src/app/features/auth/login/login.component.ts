@@ -44,13 +44,21 @@ export class LoginComponent {
     this.isLoading.set(true);
 
     const loginData: LoginRequest = {
-      username: this.form.value.email!, // Backend espera "username"
+      username: this.form.value.email!,
       password: this.form.value.password!,
     };
 
     this.authService.login(loginData).subscribe({
       next: () => {
-        this.router.navigate(['/dashboard']); // Redireciona para Home após login
+        const roles = this.authService.getUserRoles();
+
+        if (roles.includes('ADMIN')) {
+          this.router.navigate(['/admin']);
+        } else if (roles.includes('PROFESSIONAL')) {
+          this.router.navigate(['/painel-do-profissional']);
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
       },
       error: (err) => {
         this.isLoading.set(false);

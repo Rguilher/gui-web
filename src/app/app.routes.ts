@@ -8,11 +8,10 @@ import { MainLayoutComponent } from './core/layout/main-layout/main-layout.compo
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  // --- Rotas Públicas (Sem Layout Global) ---
   {
     path: '',
     component: LandingComponent,
-    pathMatch: 'full', // Garante que só carrega na raiz exata
+    pathMatch: 'full',
   },
   { path: 'login', component: LoginComponent },
   { path: 'cadastrar', component: RegisterComponent },
@@ -24,19 +23,46 @@ export const routes: Routes = [
         (m) => m.ForgotPasswordComponent,
       ),
   },
-
-  // --- Rotas Protegidas (Dentro do MainLayout) ---
   {
-    path: '', // Rota "Virtual" para aplicar o Layout
+    path: '',
     component: MainLayoutComponent,
-    canActivate: [authGuard], // Protege todas as filhas de uma vez
+    canActivate: [authGuard],
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'appointments/new', component: NewAppointmentComponent },
-      // Futuras rotas protegidas virão aqui (ex: profile, history)
+      {
+        path: 'minha-agenda',
+        loadComponent: () =>
+          import('./features/professional-agenda/professional-agenda.component').then(
+            (c) => c.ProfessionalAgendaComponent,
+          ),
+        data: { roles: ['PROFISSIONAL', 'ADMIN'] },
+      },
+      {
+        path: 'admin/usuarios',
+        loadComponent: () =>
+          import('./features/admin/user-management/user-management.component').then(
+            (c) => c.UserManagementComponent,
+          ),
+        data: { roles: ['ADMIN'] },
+      },
+      {
+        path: 'admin',
+        loadComponent: () =>
+          import('./features/admin/admin-dashboard/admin-dashboard.component').then(
+            (c) => c.AdminDashboardComponent,
+          ),
+        data: { roles: ['ADMIN'] },
+      },
+      {
+        path: 'painel-do-profissional',
+        loadComponent: () =>
+          import('./features/professional/professional-dashboard/professional-dashboard.component').then(
+            (c) => c.ProfessionalDashboardComponent,
+          ),
+        data: { roles: ['PROFESSIONAL', 'ADMIN'] },
+      },
     ],
   },
-
-  // --- Wildcard (Sempre por último) ---
   { path: '**', redirectTo: '' },
 ];

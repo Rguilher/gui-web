@@ -23,7 +23,7 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  accessToken: string; // Certifique-se que o Backend retorna "accessToken" mesmo. Se for "token", ajuste aqui.
+  accessToken: string;
   expiresIn: number;
 }
 
@@ -61,7 +61,6 @@ export class AuthService {
     );
   }
 
-  // --- Métodos de Recuperação de Senha ---
   forgotPassword(email: string): Observable<void> {
     const request: ForgotPasswordRequest = { email };
     return this.http.post<void>(`${this.baseUrl}/forgot-password`, request);
@@ -90,5 +89,29 @@ export class AuthService {
       return !!localStorage.getItem('auth-token');
     }
     return false;
+  }
+
+  getToken(): string | null {
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem('auth-token');
+    }
+    return null;
+  }
+
+  getUserRoles(): string[] {
+    const token = this.getToken();
+    if (!token) return [];
+
+    try {
+      const payloadBase64 = token.split('.')[1];
+      const payloadJson = atob(payloadBase64);
+      const payload = JSON.parse(payloadJson);
+      const roles: string[] = payload.roles || [];
+
+      return roles.map((role) => role.replace('ROLE_', ''));
+    } catch (error) {
+      console.error('Erro ao decodificar o token JWT', error);
+      return [];
+    }
   }
 }
