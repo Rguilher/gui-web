@@ -4,6 +4,10 @@
   height: 100vh;
 }
 
+.header-toolbar {
+  z-index: 2;
+}
+
 .spacer {
   flex: 1 1 auto;
 }
@@ -11,11 +15,18 @@
 .global-loader {
   position: absolute;
   top: 64px;
-  /* Altura padrão da toolbar */
   left: 0;
   width: 100%;
   z-index: 999;
-  /* Fica acima do conteúdo */
+}
+
+.sidenav-container {
+  flex: 1;
+}
+
+.sidenav {
+  width: 250px;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .content {
@@ -23,5 +34,14 @@
   flex: 1;
   overflow-y: auto;
   background-color: #f5f5f5;
-  /* Cor de fundo suave */
+}
+
+
+.active-link {
+  background: rgba(0, 0, 0, 0.04);
+  color: #3f51b5;
+  font-weight: 500;
+  mat-icon {
+    color: #3f51b5;
+  }
 }

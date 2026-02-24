@@ -1,11 +1,10 @@
 <div class="layout-container">
-  <mat-toolbar color="primary">
-    <button mat-icon-button routerLink="/dashboard">
-      <mat-icon>home</mat-icon>
+  <mat-toolbar color="primary" class="header-toolbar">
+    <button mat-icon-button (click)="sidenav.toggle()">
+      <mat-icon>menu</mat-icon>
     </button>
 
     <span class="app-title">Studio Gui</span>
-
     <span class="spacer"></span>
 
     <button mat-button (click)="logout()">
@@ -18,7 +17,53 @@
     <mat-progress-bar mode="indeterminate" color="accent" class="global-loader"></mat-progress-bar>
   }
 
-  <main class="content">
-    <router-outlet></router-outlet>
-  </main>
+  <mat-sidenav-container class="sidenav-container">
+
+    <mat-sidenav #sidenav mode="side" opened class="sidenav">
+      <mat-nav-list>
+
+        <div mat-subheader>Geral</div>
+        <a mat-list-item routerLink="/dashboard" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>home</mat-icon>
+          <div matListItemTitle>Início</div>
+        </a>
+        <a mat-list-item routerLink="/appointments/new" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>add_circle</mat-icon>
+          <div matListItemTitle>Novo Agendamento</div>
+        </a>
+
+        @if (isProfessional()) {
+          <mat-divider></mat-divider>
+          <div mat-subheader>Área do Profissional</div>
+          <a mat-list-item routerLink="/painel-do-profissional" routerLinkActive="active-link">
+            <mat-icon matListItemIcon>work</mat-icon>
+            <div matListItemTitle>Painel</div>
+          </a>
+          <a mat-list-item routerLink="/minha-agenda" routerLinkActive="active-link">
+            <mat-icon matListItemIcon>calendar_today</mat-icon>
+            <div matListItemTitle>Minha Agenda</div>
+          </a>
+        }
+
+        @if (isAdmin()) {
+          <mat-divider></mat-divider>
+          <div mat-subheader>Administração</div>
+          <a mat-list-item routerLink="/admin" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
+            <mat-icon matListItemIcon>dashboard</mat-icon>
+            <div matListItemTitle>Dashboard Admin</div>
+          </a>
+          <a mat-list-item routerLink="/admin/usuarios" routerLinkActive="active-link">
+            <mat-icon matListItemIcon>people</mat-icon>
+            <div matListItemTitle>Gestão de Usuários</div>
+          </a>
+        }
+
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="content">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+
+  </mat-sidenav-container>
 </div>
