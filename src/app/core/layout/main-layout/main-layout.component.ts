@@ -15,7 +15,7 @@ import { AuthService } from '../../services/auth.service';
   imports: [
     RouterOutlet,
     RouterLink,
-    RouterLinkActive, // Usado para destacar o menu ativo
+    RouterLinkActive,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,

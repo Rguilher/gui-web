@@ -48,11 +48,15 @@ export class NewAppointmentComponent implements OnInit {
   services = signal<ServiceOption[]>([]);
   professionals = signal<ProfessionalOption[]>([]);
 
-  // Controle visual dos horários
   availableSlots = signal<string[]>([]);
   isSearchingSlots = signal<boolean>(false);
 
   minDate = new Date();
+
+  dateFilter = (d: Date | null): boolean => {
+    const day = (d || new Date()).getDay();
+    return day !== 0 && day !== 1;
+  };
 
   form = this.fb.group({
     serviceId: ['', Validators.required],
@@ -83,14 +87,13 @@ export class NewAppointmentComponent implements OnInit {
   }
 
   updateAvailability() {
-    // Não precisamos mais do serviceId para buscar a disponibilidade
     const { professionalId, date } = this.form.value;
 
     if (professionalId && date) {
       const formattedDate = this.datePipe.transform(date, 'yyyy-MM-dd');
       if (!formattedDate) return;
 
-      // Limpa a lista visualmente antes de buscar os novos horários para evitar confusão UX
+
       this.availableSlots.set([]);
       this.isSearchingSlots.set(true);
 
@@ -124,7 +127,6 @@ export class NewAppointmentComponent implements OnInit {
     const [hours, minutes] = time!.split(':');
     dateObj.setHours(+hours, +minutes, 0);
 
-    // Formata para local string para evitar conversão UTC indesejada pelo backend
     const localDateString = this.datePipe.transform(
       dateObj,
       'yyyy-MM-ddTHH:mm:ss',
@@ -133,7 +135,7 @@ export class NewAppointmentComponent implements OnInit {
     const request = {
       serviceId: Number(serviceId),
       professionalId: Number(professionalId),
-      startTime: localDateString!, // Envia o horário exato que o usuário vê (Wall Clock Time)
+      startTime: localDateString!,
     };
 
     this.appointmentService.schedule(request).subscribe({

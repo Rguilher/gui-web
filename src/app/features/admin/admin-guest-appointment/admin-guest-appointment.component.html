@@ -1,0 +1,99 @@
+<div class="appointment-container">
+  <mat-card class="appointment-card">
+    <mat-card-header>
+      <mat-card-title>Agendamento Avulso (Guest)</mat-card-title>
+      <mat-card-subtitle>Área administrativa para clientes sem cadastro</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nome do Cliente</mat-label>
+          <input matInput formControlName="guestName" placeholder="Ex: João da Silva">
+          @if (form.get('guestName')?.hasError('required') && form.get('guestName')?.touched) {
+            <mat-error>O nome é obrigatório</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Telefone / WhatsApp</mat-label>
+          <input matInput formControlName="guestPhone" placeholder="Ex: (11) 99999-9999">
+          @if (form.get('guestPhone')?.hasError('required') && form.get('guestPhone')?.touched) {
+            <mat-error>O telefone é obrigatório</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Selecione o Serviço</mat-label>
+          <mat-select formControlName="serviceId">
+            @for (service of services(); track service.id) {
+              <mat-option [value]="service.id">
+                {{ service.name }} - {{ service.price | currency:'BRL' }} ({{service.durationMin || 45}} min)
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Selecione o Profissional</mat-label>
+          <mat-select formControlName="professionalId">
+            @for (prof of professionals(); track prof.id) {
+              <mat-option [value]="prof.id">{{ prof.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Data</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="date" [min]="minDate"
+                 readonly (click)="picker.open()" style="cursor: pointer;">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <div class="slots-container">
+          <h3>Horários Disponíveis</h3>
+
+          @if (!form.value.professionalId || !form.value.date) {
+            <p class="hint-text">Selecione o profissional e a data para ver a agenda.</p>
+          }
+
+          @if (isSearchingSlots()) {
+             <div class="loading-slots">
+                <p>Verificando disponibilidade...</p>
+             </div>
+          }
+
+          @if (availableSlots().length > 0 && !isSearchingSlots()) {
+            <mat-chip-listbox aria-label="Seleção de Horário" formControlName="time">
+              @for (slot of availableSlots(); track slot) {
+                <mat-chip-option [value]="slot" (click)="selectTime(slot)" color="primary">
+                  {{ slot }}
+                </mat-chip-option>
+              }
+            </mat-chip-listbox>
+          }
+
+          @if (availableSlots().length === 0 && !isSearchingSlots() && form.value.professionalId && form.value.date) {
+            <div class="empty-slots">
+              <mat-icon>event_busy</mat-icon>
+              <p>Agenda lotada para esta data.</p>
+            </div>
+          }
+
+          @if (form.get('time')?.hasError('required') && form.get('time')?.touched) {
+            <mat-error class="slot-error">Selecione um horário.</mat-error>
+          }
+        </div>
+
+        <div class="actions">
+          <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || form.pristine">
+            Confirmar Agendamento Avulso
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

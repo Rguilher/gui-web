@@ -56,6 +56,20 @@
             <mat-icon matListItemIcon>people</mat-icon>
             <div matListItemTitle>Gestão de Usuários</div>
           </a>
+          <mat-divider></mat-divider>
+          <div mat-subheader>Administração</div>
+          <a mat-list-item routerLink="/admin" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
+            <mat-icon matListItemIcon>dashboard</mat-icon>
+            <div matListItemTitle>Dashboard Admin</div>
+          </a>
+          <a mat-list-item routerLink="/admin/usuarios" routerLinkActive="active-link">
+            <mat-icon matListItemIcon>people</mat-icon>
+            <div matListItemTitle>Gestão de Usuários</div>
+          </a>
+          <a mat-list-item routerLink="/admin/agendamento-avulso" routerLinkActive="active-link">
+            <mat-icon matListItemIcon>event_available</mat-icon>
+            <div matListItemTitle>Agendamento Avulso</div>
+          </a>
         }
 
       </mat-nav-list>

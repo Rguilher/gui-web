@@ -15,6 +15,14 @@ export interface ProfessionalOption {
   name: string;
 }
 
+export interface CreateGuestAppointmentRequest {
+  guestName: string;
+  guestPhone: string;
+  professionalId: number;
+  serviceId: number;
+  startTime: string;
+}
+
 export interface CreateAppointmentRequest {
   professionalId: number;
   serviceId: number;
@@ -39,7 +47,7 @@ export class AppointmentService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
-  // --- Leitura ---
+
   getAppointmentsToday(): Observable<Appointment[]> {
     return this.http.get<Appointment[]>(`${this.apiUrl}/appointments/today`);
   }
@@ -52,7 +60,7 @@ export class AppointmentService {
     return this.http.delete<void>(`${this.apiUrl}/appointments/${id}`);
   }
 
-  // --- Escrita ---
+
   getServices(): Observable<ServiceOption[]> {
     return this.http.get<ServiceOption[]>(`${this.apiUrl}/services`);
   }
@@ -63,7 +71,7 @@ export class AppointmentService {
       .pipe(map((response) => response.content || []));
   }
 
-  // Busca apenas os slots livres (Agora depende apenas do Profissional e Data)
+
   getAvailability(professionalId: number, date: string): Observable<string[]> {
     const params = new HttpParams()
       .set('professionalId', professionalId.toString())
@@ -80,5 +88,9 @@ export class AppointmentService {
 
   getAppointmentsMonth(): Observable<Appointment[]> {
     return this.http.get<Appointment[]>(`${this.apiUrl}/appointments/month`);
+  }
+
+  scheduleGuest(data: CreateGuestAppointmentRequest): Observable<any> {
+    return this.http.post(`${this.apiUrl}/appointments/admin/guest`, data);
   }
 }

@@ -62,6 +62,14 @@ export const routes: Routes = [
           ),
         data: { roles: ['PROFESSIONAL', 'ADMIN'] },
       },
+      {
+        path: 'admin/agendamento-avulso',
+        loadComponent: () =>
+          import('./features/admin/admin-guest-appointment/admin-guest-appointment.component').then(
+            (c) => c.AdminGuestAppointmentComponent,
+          ),
+        data: { roles: ['ADMIN'] },
+      },
     ],
   },
   { path: '**', redirectTo: '' },
