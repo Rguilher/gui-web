@@ -1,0 +1,65 @@
+<div class="agenda-container">
+
+  <header class="agenda-header">
+    <div class="title-section">
+      <h2>Minha Agenda</h2>
+      <button mat-button color="primary" (click)="resetToToday()">Ir para Hoje</button>
+    </div>
+
+    <div class="navigation-controls">
+      <button mat-icon-button (click)="previousPeriod()" [title]="isMobile() ? 'Dia Anterior' : 'Semana Anterior'">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      @if (weekDays().length > 0) {
+        <span class="week-label">
+          @if (isMobile()) {
+            {{ weekDays()[0] | date:'dd/MM' }}
+          } @else {
+            {{ weekDays()[0] | date:'dd/MM' }} até {{ weekDays()[4] | date:'dd/MM' }}
+          }
+        </span>
+      }
+
+      <button mat-icon-button (click)="nextPeriod()" [title]="isMobile() ? 'Próximo Dia' : 'Próxima Semana'">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </header>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <p>Carregando agenda...</p>
+    </div>
+  } @else {
+    <div class="calendar-grid" [class.mobile-grid]="isMobile()">
+      <div class="time-column-header">Horário</div>
+
+      @for (day of weekDays(); track day) {
+        <div class="day-header" [class.is-today]="day.toDateString() === (currentBaseDate().toDateString())">
+          {{ day | date:'EEEE' }} <br>
+          <small>{{ day | date:'dd/MM' }}</small>
+        </div>
+      }
+
+      @for (slot of agendaGrid(); track slot.time) {
+        <div class="time-cell">{{ slot.time }}</div>
+
+        @for (daySlot of slot.days; track daySlot.date) {
+          <div class="agenda-cell" [class.has-appointment]="daySlot.appointment">
+            @if (daySlot.appointment) {
+              <div class="appointment-card">
+                <strong>{{ daySlot.appointment.serviceName }}</strong>
+                <span>Cliente: {{ daySlot.appointment.clientName }}</span>
+              </div>
+            } @else {
+              <div class="empty-slot">
+                <span>Livre</span>
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  }
+</div>

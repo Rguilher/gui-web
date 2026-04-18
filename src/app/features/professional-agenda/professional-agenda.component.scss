@@ -1,0 +1,167 @@
+// Container principal para dar um respiro na tela
+.agenda-container {
+  padding: 16px;
+}
+
+// 1. O Header de navegação
+.agenda-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  background: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  .title-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+  }
+
+  .navigation-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #f5f5f5;
+    padding: 4px 8px;
+    border-radius: 24px;
+
+    .week-label {
+      font-weight: 500;
+      color: #333;
+      min-width: 140px;
+      text-align: center;
+    }
+  }
+}
+
+// 2. A Matriz de Calendário
+.calendar-grid {
+  display: grid;
+  // 1 coluna para a hora (menor) + 5 colunas iguais para os dias (Ter-Sab)
+  grid-template-columns: 80px repeat(5, 1fr);
+  gap: 1px;
+  background-color: #e0e0e0; // Cria o efeito de borda entre as células
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+
+  // Importante: Aplica os estilos apenas nos filhos DIRETOS do grid
+  >div {
+    background-color: #fff;
+    padding: 12px;
+  }
+
+  .time-column-header,
+  .day-header {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 2px solid #ddd;
+
+    // Destaque visual dinâmico para o dia atual (O [class.is-today] do HTML)
+    &.is-today {
+      background-color: #e3f2fd;
+      color: #1976d2;
+      border-bottom: 3px solid #1976d2;
+    }
+  }
+
+  .time-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #666;
+    background-color: #fafafa;
+  }
+
+  .agenda-cell {
+    min-height: 80px; // Altura mínima para o bloco de 45 min
+    transition: background-color 0.2s;
+
+    &.has-appointment {
+      background-color: #e8f5e9; // Fundo verde suave para blocos ocupados
+    }
+
+    .appointment-card {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 8px;
+      background-color: #4caf50;
+      color: white;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      height: 100%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      cursor: pointer; // Prepara para um futuro clique de detalhes
+      transition: transform 0.2s;
+
+      &:hover {
+        transform: scale(1.02);
+      }
+    }
+
+    .empty-slot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #ccc;
+      font-size: 0.8rem;
+      border: 1px dashed #eee;
+      border-radius: 4px;
+    }
+  }
+
+  // --- Ajuste para Dispositivos Móveis ---
+  &.mobile-grid {
+    // 1 coluna de 60px para o horário e 1 coluna flexível (1fr) para o ÚNICO dia
+    grid-template-columns: 60px 1fr;
+
+    .time-cell {
+      font-size: 0.85rem;
+      padding: 8px;
+    }
+
+    .agenda-cell {
+      .appointment-card {
+        padding: 12px;
+
+        strong {
+          font-size: 1rem;
+        }
+
+        span {
+          font-size: 0.95rem;
+        }
+      }
+    }
+  }
+}
+
+// 3. Media Query Global para telas pequenas
+@media (max-width: 600px) {
+  .agenda-header {
+    flex-direction: column;
+    gap: 16px;
+
+    .title-section {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .navigation-controls {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+}

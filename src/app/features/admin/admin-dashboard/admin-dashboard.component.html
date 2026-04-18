@@ -1,0 +1,45 @@
+<div class="admin-hub-container">
+  <header class="hub-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">dashboard_customize</mat-icon>
+      <div>
+        <h1>Painel Administrativo</h1>
+        <p>Visão geral e gestão central do sistema Studio Gui</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="modules-grid">
+    <mat-card class="module-card" routerLink="/admin/usuarios">
+      <div class="icon-wrapper users">
+        <mat-icon>manage_accounts</mat-icon>
+      </div>
+      <mat-card-content>
+        <h3>Gestão de Usuários</h3>
+        <p>Altere permissões e pesquise clientes/profissionais.</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="module-card" routerLink="/minha-agenda">
+      <div class="icon-wrapper agenda">
+        <mat-icon>edit_calendar</mat-icon>
+      </div>
+      <mat-card-content>
+        <h3>Minha Agenda</h3>
+        <p>Visualize os seus horários e serviços da semana.</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="module-card disabled-card">
+      <div class="icon-wrapper billing">
+        <mat-icon>request_quote</mat-icon>
+      </div>
+      <mat-card-content>
+        <h3>Faturamento</h3>
+        <p>Controle de caixa e relatórios financeiros.</p>
+        <span class="badge-soon">Em breve</span>
+      </mat-card-content>
+    </mat-card>
+
+    </div>
+</div>

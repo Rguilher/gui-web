@@ -1,0 +1,155 @@
+.appointment-container {
+  display: flex;
+  justify-content: center;
+  /* Centraliza Horizontalmente */
+  align-items: flex-start;
+  /* Mantém no topo com espaçamento (melhor para scroll em mobile) */
+  /* Se quiser centralizar verticalmente também, troque 'flex-start' por 'center' */
+
+  width: 100%;
+  /* GARANTE que o container ocupe a largura total da área disponível */
+  padding: 2rem 1rem;
+  background-color: #f5f5f5;
+  min-height: calc(100vh - 64px);
+  box-sizing: border-box;
+  /* Garante que o padding não estoure a largura */
+}
+
+.appointment-card {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  /* Reforço extra para centralização */
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: white;
+  /* Garante fundo branco caso o tema mude */
+
+  mat-card-header {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    mat-card-title {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    mat-card-subtitle {
+      font-size: 0.95rem;
+      color: #616161;
+    }
+  }
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+/* --- Área de Slots --- */
+.slots-container {
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #fafafa;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+
+  h3 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #424242;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .hint-text {
+    color: #757575;
+    font-style: italic;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .loading-slots {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+    color: #3f51b5;
+    font-weight: 500;
+  }
+
+  mat-chip-listbox {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    /* Garante que os horários fiquem centralizados dentro da caixa */
+  }
+
+  mat-chip-option {
+    font-weight: 500;
+  }
+
+  .empty-slots {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #d32f2f;
+    gap: 0.5rem;
+    padding: 2rem 1rem;
+    background: #fff0f0;
+    border-radius: 8px;
+
+    mat-icon {
+      font-size: 2rem;
+      width: 2rem;
+      height: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+
+  .slot-error {
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    display: block;
+    color: #f44336;
+    text-align: center;
+    font-weight: 500;
+  }
+}
+
+.actions {
+  margin-top: 1.5rem;
+
+  button {
+    width: 100%;
+    padding: 1.2rem;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+}
+
+@media (max-width: 400px) {
+  .appointment-card {
+    padding: 1rem;
+  }
+
+  mat-chip-listbox {
+    gap: 8px;
+  }
+}
