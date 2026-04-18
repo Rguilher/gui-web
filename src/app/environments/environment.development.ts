@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:8080/api', // URL base do seu Spring Boot
+  production: true,
+  apiUrl: 'https://studioguihair.com.br/api',
 };
